@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Authentification Utilisateur</title>
+    <!-- Inclusion des fichiers Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title text-center">Authentification Utilisateur</h1>
+                    <form th:action="@{/login}" th:object="${dentiste}" method="post">
+                        <div class="form-group">
+                            <label for="nomUtilisateur">Nom du Utilisateur:</label>
+                            <input type="text" id="nomUtilisateur" class="form-control" th:field="*{nomUtilisateur}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="motDepass">Mot de passe:</label>
+                            <input type="password" id="motDepass" class="form-control" th:field="*{motDepass}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="typeConsultation">Role</label>
+                            <select class="form-control" id="typeConsultation"  required>
+                                <option th:value="SUIVI">DENTISTE</option>
+                                <option th:value="URGENCE">SECRETAIRE</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Se connecter</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Inclusion des fichiers Bootstrap JS (facultatif si vous n'utilisez pas les fonctionnalités JS de Bootstrap) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
+        integrity="sha384-W6k/hg3pFllL2UuK2vEWIbLNt+DULZ4LpYxpP9ADhI7z+N+KlZuY7R5l+6Ff0f8l"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-b4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+pyOw1taO+lvC4szP+6N0z4z9c3w1AsIh"
+        crossorigin="anonymous"></script>
+</body>
+</html>

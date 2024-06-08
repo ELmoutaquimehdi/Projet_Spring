@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil du Dentiste</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff !important;
+        }
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .navbar-nav .nav-link {
+            color: #fff !important;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .navbar-nav .nav-link:hover {
+            color: #f8f9fa !important;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 15px 15px 0 0;
+            font-weight: bold;
+        }
+        .card-title {
+            font-size: 1.5rem;
+        }
+        .form-control {
+            border: 1px solid #ced4da;
+            border-radius: 10px;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Dr. ELMEHDI ELMOUTAQUI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Mon Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./patients">Patients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Caisse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./login">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-5">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">Profil du Dentiste:<h5> <span th:text="${dentiste.nomUtilisateur}"></span></h5></h5>
+        </div>
+        <div class="card-body">
+            <div th:if="${dentiste != null}">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="nomUtilisateur">Nom d'utilisateur:</label>
+                            <input type="text" class="form-control" id="nomUtilisateur" th:value="${dentiste.nomUtilisateur}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="nom">Nom:</label>
+                            <input type="text" class="form-control" id="nom" th:value="${dentiste.nom}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="prenom">Prénom:</label>
+                            <input type="text" class="form-control" id="prenom" th:value="${dentiste.prenom}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" th:value="${dentiste.email}" disabled>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="telephone">Téléphone:</label>
+                            <input type="text" class="form-control" id="telephone" th:value="${dentiste.telephone}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="adresse">Adresse:</label>
+                            <textarea class="form-control" id="adresse" rows="3" th:text="${dentiste.adresse}" disabled></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="disponibilites">Disponibilités:</label>
+                            <ul class="list-group" id="disponibilites">
+                                <li class="list-group-item" th:each="entry : ${dentiste.disponibilites}">
+                                    <span th:text="${entry.key}"></span>: <span th:text="${entry.value}"></span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${error != null}">
+                <p th:text="${error}"></p>
+            </div>
+        </div>
+        <div class="card-footer text-right">
+            <button class="btn btn-secondary" id="editProfile">Modifier le Profil</button>
+            <button class="btn btn-primary" id="saveProfile" style="display:none;">Enregistrer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS, jQuery, and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#editProfile").click(function() {
+            $("input, textarea").prop("disabled", false);
+            $(this).hide();
+            $("#saveProfile").show();
+        });
+
+        $("#saveProfile").click(function() {
+            // Code pour enregistrer les modifications du profil
+            $("input, textarea").prop("disabled", true);
+            $(this).hide();
+            $("#editProfile").show();
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Médical</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff !important;
+        }
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .navbar-brand:hover {
+            color: #f8f9fa !important;
+
+            .form-inline {
+                display: inline-block;
+            }
+
+            .btn-group .btn {
+                margin-right: 5px; /* Optional: Adds a small margin between buttons */
+            }
+
+            .btn-group form {
+                display: inline-block;
+            }
+        }
+    </style>
+
+
+
+
+
+
+
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Dr. ELMEHDI ELMOUTAQUI</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="./dentiste">Mon Profil</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./patients">Patients</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Caisse</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./login">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Patient Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <strong>nom :</strong> <span th:text="${patient.nom}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Email:</strong> <span th:text="${patient.email}"></span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Adresse:</strong> <span th:text="${patient.adresse}"></span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="consultation-tab" data-toggle="tab" href="#consultation" role="tab" aria-controls="consultation" aria-selected="true">Consultations</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="financial-tab" data-toggle="tab" href="#financial" role="tab" aria-controls="financial" aria-selected="false">Factures</a>
+                </li>
+            </ul>
+            <div class="tab-content mt-4" id="myTabContent">
+                <div class="tab-pane fade show active" id="consultation" role="tabpanel" aria-labelledby="consultation-tab">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="consultation : ${dossierMedical.consultations}">
+                            <td th:text="${consultation.dateConsultation}"></td>
+                            <td th:text="${consultation.typeConsultation}"></td>
+                            <td>
+                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                <form th:action="@{/dossierMedical/{numeroDossier}/deleteConsultation(numeroDossier=${dossierMedical.numeroDossier})}" method="post" style="display: inline;">
+                                    <input type="hidden" name="consultationId" th:value="${consultation.idConsultation}" />
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form th:action="@{/dossierMedical/{numeroDossier}/ajouterConsultation(numeroDossier=${dossierMedical.numeroDossier})}" th:object="${consultation}" method="post">
+                        <div class="form-group">
+                            <label for="dateConsultation">Date</label>
+                            <input type="date" class="form-control" id="dateConsultation" th:field="*{dateConsultation}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="typeConsultation">Type</label>
+                            <select class="form-control" id="typeConsultation" th:field="*{typeConsultation}" required>
+                                <option th:value="CONSULTATION_GENERALE">Consultation Générale</option>
+                                <option th:value="SUIVI">Suivi</option>
+                                <option th:value="URGENCE">Urgence</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter Consultation</button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="financial" role="tabpanel" aria-labelledby="financial-tab">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Montant Restant</th>
+                            <th>Montant Payé</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="facture : ${dossierMedical.factures}">
+                            <td th:text="${facture.dateFacturation}"></td>
+                            <td th:text="${facture.montantRestant}"></td>
+                            <td th:text="${facture.montantPaye}"></td>
+                            <td>
+                                <button class="btn btn-sm btn-info"><i class="fas fa-edit"></i></button>
+                                <form th:action="@{/dossierMedical/{numeroDossier}/deleteFacture(numeroDossier=${dossierMedical.numeroDossier})}" method="post" style="display: inline;">
+                                    <input type="hidden" name="factureId" th:value="${facture.idFacture}" />
+                                    <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <form th:action="@{/dossierMedical/{numeroDossier}/ajouterFacture(numeroDossier=${dossierMedical.numeroDossier})}" th:object="${facture}" method="post">
+                        <div class="form-group">
+                            <label for="dateFacturation">Date</label>
+                            <input type="date" class="form-control" id="dateFacturation" th:field="*{dateFacturation}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="montantTotal">Montant Total</label>
+                            <input type="number" step="0.01" class="form-control" id="montantTotal" th:field="*{montantTotal}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="montantPaye">Montant Payé</label>
+                            <input type="number" step="0.01" class="form-control" id="montantPaye" th:field="*{montantPaye}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="montantRestant">Montant Restant</label>
+                            <input type="number" step="0.01" class="form-control" id="montantRestant" th:field="*{montantRestant}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="typePaiement">Type de Paiement</label>
+                            <select class="form-control" id="typePaiement" th:field="*{typePaiement}" required>
+                                <option th:value="CHEQUE">CHEQUE</option>
+                                <option th:value="CREDIT_CARD">Carte de Crédit</option>
+                                <option th:value="BANK_TRANSFER">Virement Bancaire</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Ajouter Facture</button>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS, jQuery, and Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<!-- Font Awesome JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+</body>
+</html>
